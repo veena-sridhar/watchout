@@ -1,59 +1,5 @@
 
 var mouse = {x: 500, y: 500}
-//score DOM elements
-var highScoreElement = document.getElementById('high');
-var currentScoreElement = document.getElementById('current');
-var collisionElement = document.getElementById('collisions');
-
-//score settings
-var currentScore = 0;
-var collisionScore = 0;
-
-//collision function
-// var collide = function(node) {
-//     var r = 10,
-//         nx1 = node.x - r,
-//         nx2 = node.x + r,
-//         ny1 = node.y - r,
-//         ny2 = node.y + r;
-
-//     return function(quad, x1, y1, x2, y2) {
-//         if (quad.point && (quad.point !== node)) {
-//             var x = node.x - quad.point.x,
-//                 y = node.y - quad.point.y,
-//                 l = Math.sqrt(x * x + y * y),
-//                 r = 10 + quad.point.radius;
-//             if (l < r) {
-//                 l = (l - r) / l * .5;
-//                 node.x -= x *= l;
-//                 node.y -= y *= l;
-//                 quad.point.x += x;
-//                 quad.point.y += y;
-//             }
-//         }
-//         return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-//      };
-// }
-
-
-
-//score keeper function
-// var scoreKeeper = function () {
-
-// 	var scoreArray = []
-// 	//if the player touches the enemy node
-// 	if (collide('player')) {
-// 		console.log('collided!');
-// 		scoreArray.push(currentScore);
-// 		currentScore = 0;
-// 		collisionElement.innerHTML = collisionScore++;
-// 	} else {
-// 		setInterval(function(){currentScoreElement.innerHTML = currentScore++}, 500);
-// 		highScoreElement.innerHTML = Math.max.apply(null, scoreArray);		
-// 	}
-
-// }
-// scoreKeeper();
 
 //grabbing the board
 var bodySelection = d3.select('.board');
@@ -71,6 +17,8 @@ var drag = d3.behavior.drag()
     d3.select(this).attr('cx', mouse.x).attr('cy', mouse.y);
   })
 
+ 
+
 var player = svgSelection.selectAll('circle.player')
 	.data([1])
 	.enter()
@@ -80,7 +28,6 @@ var player = svgSelection.selectAll('circle.player')
 	.attr('cy', '150')
 	.attr('r', '10')
 	.style('fill', 'red').call(drag);
-
 
 
 var createEnemies = function(num) {
@@ -96,19 +43,13 @@ var circle = svgSelection.selectAll()
 	.enter()
 	.append('circle')
 	.attr('class', 'enemy')
-	.attr('cx', function(d) {
-	  return Math.ceil(Math.random() * 60);
-})
-
-	.attr('cy', function(d) {
-  return Math.ceil(Math.random() * 80);
-})
+	.attr('cx', 0)
+	.attr('cy', 0)
 	.attr('r', 10)
 	.style('fill', 'black');
 
-
-
-setInterval(function() {d3.selectAll('circle.enemy')
+setInterval(function() {
+	d3.selectAll('circle.enemy')
     .transition()
     .duration(750)
     .attr('cx', function(d) {
@@ -118,10 +59,41 @@ setInterval(function() {d3.selectAll('circle.enemy')
     .attr('cy', function(d) {
       return Math.ceil(Math.random() * 57 * d);
     })
-
   }, 1000);
 
+var highScoreElement = document.getElementById('high');
+var currentScoreElement = document.getElementById('current');
+var collisionElement = document.getElementById('collisions');
+
+//score settings
+var currentScore = 0;
+var collisionScore = 0;
+
+var scoreKeeper = function () {
+ 	var playerX = d3.select('.player').attr('cx');
+ 	var playerY = d3.select('.player').attr('cy');
+ 	var enemyX = d3.select('.enemy').attr('cx');
+ 	var enemyY = d3.select('.enemy').attr('cy');
+ 	var scoreArray = [];
+	if (playerX - enemyX <= 20 || enemyX - playerX <=20) {
+		if (playerY - enemyY <= 20 || enemyY - playerY <=20) {
+			scoreArray.push(currentScore);
+			currentScore = 0;
+			collisionElement.innerHTML = collisionScore++;
+		}
+	} else {
+		setInterval(function(){currentScoreElement.innerHTML = currentScore++}, 500);
+		highScoreElement.innerHTML = Math.max.apply(null, scoreArray);		
+	}
+
+ };
+
+ setInterval(scoreKeeper, 250);
 
 
+
+
+
+ 
 
 
