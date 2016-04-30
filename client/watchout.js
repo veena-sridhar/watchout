@@ -5,55 +5,22 @@ var bodySelection = d3.select('.board');
 //our svg
 var svgSelection = bodySelection
   .append('svg')
-  .attr('width', 800)
-  .attr('height', 800)
+  .attr('width', 600)
+  .attr('height', 600)
   .style('background-color', 'lightgrey');
 
+var player = svgSelection
+.append('circle')
+.attr('cx', 150)
+.attr('cy', 150)
+.attr('r', 10)
+.style('fill', 'red');
 
-
-//enemy shape
-// var circle = svgSelection.append('circle')
-// .attr('cx', 20)
-// .attr('cy', 20)
-// .attr('r', 10);
-
-// var circle = '<svg><circle cx="50" cy="50" r="20"></circle></svg>';
-
-// //helper function to create multiple enemies
-// var createEnemies = function(num, enemy) {
-//   var arr = []; //array to hold our enemy elements
-//   for (var i = 0; i < num; i++) {
-//     arr.push(enemy);
-//   }
-//   return arr;
-// }; 
-
-
-// var createEnemies = function(num) {
-//   var arr = []; //array to hold our enemy elements
-//   for (var i = 0; i < num; i++) {
-//     arr.push(Math.ceil(Math.random() * 1000));
-//   }
-//   return arr;
-// }; 
-
-// var circle = svgSelection.selectAll()
-// .data(createEnemies(10))
-// .enter()
-// .append('circle')
-// .attr('cx', function(d) {
-//   return d;
-// })
-// .attr('cy', function(d) {
-//   return d;
-// })
-// .attr('r', 10)
-// .style('fill', 'black');
 
 var createEnemies = function(num) {
   var arr = []; //array to hold our enemy elements
   for (var i = 1; i < num; i++) {
-    arr.push(i);
+    arr.push(10);
   }
   return arr;
 }; 
@@ -63,23 +30,29 @@ var circle = svgSelection.selectAll()
 .enter()
 .append('circle')
 .attr('cx', function(d) {
-  return Math.ceil(Math.random() * 45 * d);
+  return Math.ceil(Math.random() * 60);
 })
 
 .attr('cy', function(d) {
-  return Math.ceil(Math.random() * 45 * d);
+  return Math.ceil(Math.random() * 80);
 })
 .attr('r', 10)
 .style('fill', 'black')
-.transition()
-.duration(750)
-.style('color', 'red');
 
 
-setInterval(function() {
-  update(d3.shuffle(createEnemies(10))
-      .slice(0, Math.floor(Math.random() * 15)));
-}, 1500);
+
+setInterval(function() {d3.selectAll('circle')
+    .transition()
+    .duration(750)
+    .attr('cx', function(d) {
+      return Math.ceil(Math.random() * 45 * d);
+    })
+
+    .attr('cy', function(d) {
+      return Math.ceil(Math.random() * 45 * d);
+    })
+
+  }, 1000);
 
 
 
